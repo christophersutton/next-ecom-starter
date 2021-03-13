@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { FC, useMemo } from 'react'
 
 export interface State {
     displaySidebar: boolean
@@ -11,7 +11,7 @@ const initialState = {
     displaySidebar: false,
     sidebarView: 'CART',
     displayModal: false,
-    modalView: 'LOGIN_VIEW',
+    modalView: 'SUBSCRIBE',
 }
 
 type Action =
@@ -23,7 +23,7 @@ type Action =
     }
     | {
         type: 'SET_SIDEBAR_VIEW'
-        value: SIDEBAR_VIEWS
+        view: SIDEBAR_VIEWS
     }
     | {
         type: 'OPEN_MODAL'
@@ -40,7 +40,7 @@ type Action =
 type MODAL_VIEWS = 'SUBSCRIBE'
 type SIDEBAR_VIEWS = 'CART'
 
-export const UIContext = React.createContext(initialState)
+export const UIContext = React.createContext<State | any>(initialState)
 
 UIContext.displayName = 'UI'
 
@@ -58,6 +58,12 @@ function uiReducer(state: State, action: Action) {
                 displaySidebar: false,
             }
         }
+        case 'SET_SIDEBAR_VIEW': {
+            return {
+                ...state,
+                sidebarView: action.view,
+            }
+        }
         case 'OPEN_MODAL': {
             return {
                 ...state,
@@ -71,12 +77,6 @@ function uiReducer(state: State, action: Action) {
                 displayModal: false,
             }
         }
-        case 'SET_SIDEBAR_VIEW': {
-            return {
-                ...state,
-                sidebarView: action.view,
-            }
-        }
         case 'SET_MODAL_VIEW': {
             return {
                 ...state,
@@ -86,7 +86,7 @@ function uiReducer(state: State, action: Action) {
     }
 }
 
-export const UIProvider = (props) => {
+export const UIProvider: FC = (props) => {
     const [state, dispatch] = React.useReducer(uiReducer, initialState)
 
     const openSidebar = () => dispatch({ type: 'OPEN_SIDEBAR' })
@@ -95,15 +95,17 @@ export const UIProvider = (props) => {
         state.displaySidebar
             ? dispatch({ type: 'CLOSE_SIDEBAR' })
             : dispatch({ type: 'OPEN_SIDEBAR' })
+    const setSidebarView = (view: SIDEBAR_VIEWS) =>
+            dispatch({ type: 'SET_SIDEBAR_VIEW', view })
     
     const openModal = () => dispatch({ type: 'OPEN_MODAL' })
     const closeModal = () => dispatch({ type: 'CLOSE_MODAL' })
-
+    const toggleModal = () =>
+        state.displayModal
+            ? dispatch({ type: 'CLOSE_MODAL' })
+            : dispatch({ type: 'OPEN_MODAL' })
     const setModalView = (view: MODAL_VIEWS) =>
         dispatch({ type: 'SET_MODAL_VIEW', view })
-
-    const setSidebarView = (view: SIDEBAR_VIEWS) =>
-        dispatch({ type: 'SET_SIDEBAR_VIEW', view })
 
     const value = useMemo(
         () => ({
@@ -114,6 +116,7 @@ export const UIProvider = (props) => {
             setSidebarView,
             openModal,
             closeModal,
+            toggleModal,
             setModalView,
         }),
         [state]
@@ -130,7 +133,7 @@ export const useUI = () => {
     return context
 }
 
-export const ManagedUIContext = ({ children }) => (
+export const ManagedUIContext: FC = ({ children }) => (
     <UIProvider>
         {children}
     </UIProvider>

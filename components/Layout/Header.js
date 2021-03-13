@@ -1,7 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
-import React, { useState, useContext } from 'react'
-import { useUI } from '../context.tsx'
+import { useUI } from '../UI'
 
 
 const links = [

@@ -1,6 +1,6 @@
 import "../styles/globals.css";
-import Layout from "../UI/layout/Layout";
-import { ManagedUIContext } from "../UI/context.tsx";
+import { Layout } from "../components/Layout"
+import { ManagedUIContext } from "../components/UI/context"
 
 function MyApp({ Component, pageProps }) {
   return (

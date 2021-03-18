@@ -7,10 +7,11 @@ const Cart = (props) => {
   
   const subTotal = '49.99'
   const total = '49.99'
+  const lineItems = [{price:'price_0Hsbzi06QldxvBlVYACUsuxF',quantity:1}]
   
 
   const checkout = () => {
-    axios.post(`${process.env.NEXT_PUBLIC_DOMAIN}/api/checkout`)
+    axios.post(`${process.env.NEXT_PUBLIC_DOMAIN}/api/checkout`,lineItems)
       .then( async (res) => {
         const Stripe = await getStripe()
         Stripe.redirectToCheckout({ sessionId: res.data.id })

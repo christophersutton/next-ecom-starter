@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-const stripe = require('stripe')(process.env.STRIPE_SK);
+const Stripe = require('stripe')(process.env.STRIPE_SK);
 
 type StripeSession = {
   id: string
@@ -7,7 +7,7 @@ type StripeSession = {
 
 export default async (req: NextApiRequest, res: NextApiResponse<StripeSession>) => {
   
-  const session = await stripe.checkout.sessions.create({
+  const session = await Stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     line_items: req.body,
     mode: 'payment',

@@ -15,27 +15,14 @@ const initialState = {
 }
 
 type Action =
-    | {
-        type: 'OPEN_SIDEBAR'
-    }
-    | {
-        type: 'CLOSE_SIDEBAR'
-    }
-    | {
-        type: 'SET_SIDEBAR_VIEW'
-        view: SIDEBAR_VIEWS
-    }
-    | {
-        type: 'OPEN_MODAL'
-    }
-    | {
-        type: 'CLOSE_MODAL'
-    }
-    | {
-        type: 'SET_MODAL_VIEW'
-        view: MODAL_VIEWS
-    }
-
+    | { type: 'OPEN_SIDEBAR' }
+    | { type: 'CLOSE_SIDEBAR' }
+    | { type: 'SET_SIDEBAR_VIEW'
+        view: SIDEBAR_VIEWS }
+    | { type: 'OPEN_MODAL' }
+    | { type: 'CLOSE_MODAL' }
+    | { type: 'SET_MODAL_VIEW'
+        view: MODAL_VIEWS }
 
 type MODAL_VIEWS = 'SUBSCRIBE'
 type SIDEBAR_VIEWS = 'CART'
@@ -96,8 +83,8 @@ export const UIProvider: FC = (props) => {
             ? dispatch({ type: 'CLOSE_SIDEBAR' })
             : dispatch({ type: 'OPEN_SIDEBAR' })
     const setSidebarView = (view: SIDEBAR_VIEWS) =>
-            dispatch({ type: 'SET_SIDEBAR_VIEW', view })
-    
+        dispatch({ type: 'SET_SIDEBAR_VIEW', view })
+
     const openModal = () => dispatch({ type: 'OPEN_MODAL' })
     const closeModal = () => dispatch({ type: 'CLOSE_MODAL' })
     const toggleModal = () =>
@@ -133,7 +120,7 @@ export const useUI = () => {
     return context
 }
 
-export const ManagedUIContext: FC = ({ children }) => (
+export const _UIContext: FC = ({ children }) => (
     <UIProvider>
         {children}
     </UIProvider>

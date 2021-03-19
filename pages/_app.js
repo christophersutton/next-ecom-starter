@@ -1,14 +1,17 @@
 import "../styles/globals.css";
 import { Layout } from "../components/Layout"
-import { ManagedUIContext } from "../components/UI/context"
+import { _UIContext } from "../components/UI/context"
+import { _CartContext } from '../components/Cart/useCart'
 
 function MyApp({ Component, pageProps }) {
   return (
-    <ManagedUIContext>
+    <_UIContext>
+      <_CartContext>
       <Layout>
         <Component {...pageProps} />
       </Layout>
-    </ManagedUIContext>
+      </_CartContext>
+    </_UIContext>
   );
 }
 

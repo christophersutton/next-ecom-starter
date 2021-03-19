@@ -1,5 +1,4 @@
 import React, { FC, useMemo, useEffect } from "react";
-import useLocalStorage from '../../utils/useLocalStorage'
 
 export interface State {
   sessionId: string;
@@ -15,18 +14,17 @@ export interface CartItem {
   quantity: number;
 }
 
-const getInitialState = () => {
-  if (typeof window !== 'undefined' && localStorage.getItem("CART")){
-    return JSON.parse(localStorage.getItem("CART"))
+const getCartItems = () => {
+  if (typeof window !== 'undefined' && localStorage.getItem("CART_ITEMS")) {
+    return JSON.parse(localStorage.getItem("CART_ITEMS"))
   }
-  else return {
-    sessionId: "",
-    lineItems: [],
-    isLoading: false,
-  }
+  else return []
 }
-
-const init = getInitialState();
+const init = {
+  sessionId: "",
+  lineItems: getCartItems(),
+  isLoading: false,
+}
 
 type Action =
   | { type: "ADD_ITEM"; item: CartItem }
@@ -65,8 +63,9 @@ export const CartProvider: FC = (props) => {
   const [state, dispatch] = React.useReducer(cartReducer, init);
 
   useEffect(() => {
-    localStorage.setItem("CART", JSON.stringify(state));
-  }, [state]);
+    console.log('should set lineitems')
+    localStorage.setItem("CART_ITEMS", JSON.stringify(state.lineItems));
+  }, [state.lineItems]);
 
   const addToCart = (item) => dispatch({ type: "ADD_ITEM", item });
   const removeFromCart = (product_id) => dispatch({ type: "REMOVE_ITEM", product_id });

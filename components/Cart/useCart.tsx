@@ -56,6 +56,15 @@ export const cartReducer = (state: State, action: Action) => {
         lineItems: [],
       };
     }
+    case "UPDATE_ITEM": {
+      return {
+        ...state,
+        lineItems: state.lineItems.map((li) => {
+          return li.product_id === action.item.product_id ? action.item : li
+        })
+      }
+    }
+
   }
 };
 
@@ -63,18 +72,19 @@ export const CartProvider: FC = (props) => {
   const [state, dispatch] = React.useReducer(cartReducer, init);
 
   useEffect(() => {
-    console.log('should set lineitems')
     localStorage.setItem("CART_ITEMS", JSON.stringify(state.lineItems));
   }, [state.lineItems]);
 
   const addToCart = (item) => dispatch({ type: "ADD_ITEM", item });
   const removeFromCart = (product_id) => dispatch({ type: "REMOVE_ITEM", product_id });
+  const updateItem = (item) => dispatch({ type: "UPDATE_ITEM", item });
 
   const value = useMemo(
     () => ({
       ...state,
       addToCart,
       removeFromCart,
+      updateItem,
     }),
     [state]
   )

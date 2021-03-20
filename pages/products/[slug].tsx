@@ -53,7 +53,7 @@ export const getStaticProps = async ({ params }) => {
 
 export const Slug = ({ product }) => {
 
-    const { addToCart } = useCart();
+    const { addToCart, lineItems, updateItem } = useCart();
     const { openSidebar } = useUI();
 
     const newCartItem = {
@@ -65,7 +65,14 @@ export const Slug = ({ product }) => {
     }
 
     const handleAdd = () => {
-        addToCart(newCartItem)
+        
+        if (lineItems.length == 0 || lineItems.find(i => i.product_id == product.id) == undefined) {
+            addToCart(newCartItem)
+        } else {
+            const orderItem = lineItems.find(i => i.product_id == product.id)
+            updateItem({ ...orderItem, quantity: orderItem.quantity + 1 })
+        }
+
         openSidebar()
     }
 
@@ -76,7 +83,7 @@ export const Slug = ({ product }) => {
             <p>{product.description}</p>
             <p>{product.price}</p>
             <p>{product.price_id}</p>
-            <button onClick={()=> handleAdd()}>ADD TO CART</button>
+            <button onClick={() => handleAdd()}>ADD TO CART</button>
         </>
     )
 }

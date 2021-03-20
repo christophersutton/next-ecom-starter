@@ -14,26 +14,25 @@ export interface CartItem {
   quantity: number;
 }
 
-const getCartItems = () => {
-  if (typeof window !== 'undefined' && localStorage.getItem("CART_ITEMS")) {
-    return JSON.parse(localStorage.getItem("CART_ITEMS"))
+const cartLocalStorage = () => {
+  if (typeof window !== 'undefined' && localStorage.getItem("CART")) {
+    return JSON.parse(localStorage.getItem("CART"))
   }
-  else return []
-}
-const init = {
-  sessionId: "",
-  lineItems: getCartItems(),
-  isLoading: false,
+  else return {
+    sessionId: "",
+    lineItems: [],
+    isLoading: false,
+  }
 }
 
 type Action =
   | { type: "ADD_ITEM"; item: CartItem }
-  | { type: "REMOVE_ITEM"; product_id: string }
+  | { type: "REMOVE_ITEM"; item: CartItem }
   | { type: "UPDATE_ITEM"; item: CartItem }
   | { type: "EMPTY_CART" }
   | { type: "CHECKOUT" };
 
-export const CartContext = React.createContext(init);
+export const CartContext = React.createContext(cartLocalStorage());
 CartContext.displayName = "Cart";
 
 export const cartReducer = (state: State, action: Action) => {
@@ -41,19 +40,21 @@ export const cartReducer = (state: State, action: Action) => {
     case "ADD_ITEM": {
       return {
         ...state,
-        lineItems: [...state.lineItems, action.item],
+        lineItems: [...state.lineItems, action.item]
       };
     }
     case "REMOVE_ITEM": {
       return {
         ...state,
-        lineItems: state.lineItems.filter(li => li.product_id != action.product_id)
+        lineItems: state.lineItems.filter(li => li.product_id != action.item.product_id)
       };
     }
     case "EMPTY_CART": {
       return {
         ...state,
         lineItems: [],
+        subTotal: 0,
+        total: 0,
       };
     }
     case "UPDATE_ITEM": {
@@ -69,15 +70,21 @@ export const cartReducer = (state: State, action: Action) => {
 };
 
 export const CartProvider: FC = (props) => {
-  const [state, dispatch] = React.useReducer(cartReducer, init);
+  const [state, dispatch] = React.useReducer(cartReducer, cartLocalStorage());
 
   useEffect(() => {
-    localStorage.setItem("CART_ITEMS", JSON.stringify(state.lineItems));
-  }, [state.lineItems]);
+    localStorage.setItem("CART", JSON.stringify(state));
+  }, [state]);
 
   const addToCart = (item) => dispatch({ type: "ADD_ITEM", item });
-  const removeFromCart = (product_id) => dispatch({ type: "REMOVE_ITEM", product_id });
+  const removeFromCart = (item) => dispatch({ type: "REMOVE_ITEM", item });
   const updateItem = (item) => dispatch({ type: "UPDATE_ITEM", item });
+  const subTotal = state.lineItems.length > 0 
+    ? state.lineItems.reduce((a,li) => a + li.quantity * li.item_price,0) 
+    : 0
+  const total = state.lineItems.length > 0 
+    ? state.lineItems.reduce((a,li) => a + li.quantity * li.item_price,0) 
+    : 0
 
   const value = useMemo(
     () => ({
@@ -85,6 +92,8 @@ export const CartProvider: FC = (props) => {
       addToCart,
       removeFromCart,
       updateItem,
+      subTotal,
+      total
     }),
     [state]
   )

@@ -5,8 +5,8 @@ import { useCart } from "./useCart";
 import CartItem from "./CartItem/CartItem";
 
 const Cart = (props) => {
-  const cart = useCart();
-
+  const {lineItems, subTotal, total} = useCart();
+  console.log(subTotal);
   const checkout = () => {
     axios
       .post(`${process.env.NEXT_PUBLIC_DOMAIN}/api/checkout`, lineItems)
@@ -21,8 +21,8 @@ const Cart = (props) => {
     <>
       <div className="relative flex-1 px-4 sm:px-6">My Cart</div>
       <div>
-        {cart.lineItems.length > 0 ? (
-          cart.lineItems.map((item) => <CartItem item={item} />)
+        {lineItems.length > 0 ? (
+          lineItems.map((item) => <CartItem item={item} key={item.product_id}/>)
         ) : (
           <p>No items in your cart</p>
         )}
@@ -32,7 +32,7 @@ const Cart = (props) => {
           <ul className="py-3">
             <li className="flex justify-between py-1">
               <span>Subtotal</span>
-              <span>{cart.subTotal}</span>
+              <span>{ subTotal }</span>
             </li>
             <li className="flex justify-between py-1">
               <span>Taxes</span>
@@ -45,7 +45,7 @@ const Cart = (props) => {
           </ul>
           <div className="flex justify-between border-t border-accents-3 py-3 font-bold mb-10">
             <span>Total</span>
-            <span>{cart.total}</span>
+            <span>{total}</span>
           </div>
         </div>
         <button href="/checkout" onClick={() => checkout()}>

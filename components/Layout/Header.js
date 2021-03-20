@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useUI } from '../UI'
-
+import { ShoppingCart } from '../UI/Icons'
 
 const links = [
   { href: "/shop", label: "Shop" },
@@ -31,7 +31,7 @@ const Header = () => {
         </ul>
         <ul className="flex items-right space-x-4">
           <li>
-            <button onClick={()=> openSidebar()}>CART</button>
+            <button onClick={()=> openSidebar()}><ShoppingCart className={"w-6 h-6"}/></button>
           </li>
         </ul>
       </ul>

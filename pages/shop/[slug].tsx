@@ -1,7 +1,8 @@
 const Stripe = require('stripe')(process.env.STRIPE_SK);
-import { makeSlug, slugToName } from '../../utils/useSlugs'
-import { useCart } from '../../components/Cart/useCart'
-import { useUI } from '../../components/UI'
+import Image from 'next/image'
+import { makeSlug, slugToName, useDisplayPrice } from '@utils'
+import { useCart } from '@components/Cart/useCart'
+import { useUI, Button } from '@components/UI'
 
 type Product = {
     id: string
@@ -61,7 +62,8 @@ export const Slug = ({ product }) => {
         price_id: product.price_id,
         item_price: product.price,
         name: product.name,
-        quantity: 1
+        quantity: 1,
+        img: product.images[0]
     }
 
     const handleAdd = () => {
@@ -77,14 +79,23 @@ export const Slug = ({ product }) => {
     }
 
     return (
-        <>
-            <p>{product.id}</p>
-            <p>{product.name}</p>
+        <div className="">
+            
+            <h1 className="text-3xl">{product.name}</h1>
+            <Image
+                src={product.images[0]}
+                alt="Product image"
+                width={400}
+                height={400}
+            />
+
             <p>{product.description}</p>
-            <p>{product.price}</p>
-            <p>{product.price_id}</p>
-            <button onClick={() => handleAdd()}>ADD TO CART</button>
-        </>
+            <p>{useDisplayPrice(product.price)}</p>
+            <Button onClick={handleAdd} size={'XL'} shape={"PILL"}>
+                Add to Cart
+            </Button>
+            
+        </div>
     )
 }
 export default Slug

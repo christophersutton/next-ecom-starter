@@ -12,9 +12,10 @@ export interface CartItem {
   item_price: number;
   name: string;
   quantity: number;
-}
+};;
 
 const cartLocalStorage = () => {
+  // only return localstorage cart object if we're on client and certain it exists
   if (typeof window !== 'undefined' && localStorage.getItem("CART")) {
     return JSON.parse(localStorage.getItem("CART"))
   }
@@ -30,7 +31,7 @@ type Action =
   | { type: "REMOVE_ITEM"; item: CartItem }
   | { type: "UPDATE_ITEM"; item: CartItem }
   | { type: "EMPTY_CART" }
-  | { type: "CHECKOUT" };
+  | { type: "CHECKOUT_START" };
 
 export const CartContext = React.createContext(cartLocalStorage());
 CartContext.displayName = "Cart";

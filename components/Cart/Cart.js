@@ -1,15 +1,21 @@
 import { useState, useContext } from "react";
 import axios from "axios";
-import getStripe from "../../utils/getStripe";
+import { getStripe, useDisplayPrice } from "@utils";
 import { useCart } from "./useCart";
 import CartItem from "./CartItem/CartItem";
+import { Button } from '@components/UI/Button'
+import { Lock } from '@components/UI/Icons'
+
 
 const Cart = (props) => {
-  const {lineItems, subTotal, total} = useCart();
-  console.log(subTotal);
+  const { lineItems, subTotal, total } = useCart();
+
   const checkout = () => {
+    const stripe_line_items = lineItems.map((li) => {
+      return { price: li.price_id, quantity: li.quantity };
+    });
     axios
-      .post(`${process.env.NEXT_PUBLIC_DOMAIN}/api/checkout`, lineItems)
+      .post(`${process.env.NEXT_PUBLIC_DOMAIN}/api/checkout`, stripe_line_items)
       .then(async (res) => {
         const Stripe = await getStripe();
         Stripe.redirectToCheckout({ sessionId: res.data.id });
@@ -19,10 +25,14 @@ const Cart = (props) => {
 
   return (
     <>
-      <div className="relative flex-1 px-4 sm:px-6">My Cart</div>
-      <div>
+      <div className="relative px-4 sm:px-6 pb-4">
+        <h4 className="text-xl">My Cart</h4>
+      </div>
+      <div className="px-4 sm:px-6 flex-1">
         {lineItems.length > 0 ? (
-          lineItems.map((item) => <CartItem item={item} key={item.product_id}/>)
+          lineItems.map((item) => (
+            <CartItem item={item} key={item.product_id} />
+          ))
         ) : (
           <p>No items in your cart</p>
         )}
@@ -32,7 +42,7 @@ const Cart = (props) => {
           <ul className="py-3">
             <li className="flex justify-between py-1">
               <span>Subtotal</span>
-              <span>{ subTotal }</span>
+              <span>{useDisplayPrice(subTotal)}</span>
             </li>
             <li className="flex justify-between py-1">
               <span>Taxes</span>
@@ -45,12 +55,12 @@ const Cart = (props) => {
           </ul>
           <div className="flex justify-between border-t border-accents-3 py-3 font-bold mb-10">
             <span>Total</span>
-            <span>{total}</span>
+            <span>{useDisplayPrice(total)}</span>
           </div>
         </div>
-        <button href="/checkout" onClick={() => checkout()}>
-          Checkout
-        </button>
+        <Button size={'XL'} onClick={checkout} size={"FULL"} shape={"PILL"}>
+          <Lock/>Continue to Checkout
+        </Button>
       </div>
     </>
   );

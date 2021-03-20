@@ -11,12 +11,12 @@ const Sidebar: FC<Props> = ({ children, isOpen, closeSidebar }) => {
   return (
     <Transition
       show={isOpen}
-      enter="transform transition ease-in-out duration-900 sm:duration-900"
-      enterFrom="translate-x-full"
-      enterTo="translate-x-0"
-      leave="transform transition ease-in-out duration-900 sm:duration-900"
-      leaveFrom="translate-x-0"
-      leaveTo="translate-x-full"
+      enter="transition ease-in-out duration-300 transform"
+        enterFrom="transform -translate-x-full"
+        enterTo="transform translate-x-0"
+        leave="transition ease-in-out duration-300 transform"
+        leaveFrom="transform translate-x-0"
+        leaveTo="transform -translate-x-full"
     >
       <div className="fixed inset-0 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">

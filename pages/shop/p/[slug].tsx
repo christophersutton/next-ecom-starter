@@ -17,7 +17,7 @@ type Product = {
 
 export const getStaticPaths = async () => {
 
-    const resp = await Stripe.products.list();
+    const resp = await Stripe.products.list({limit:100});
     const paths = resp.data.map((p) => ({
         params: { slug: makeSlug(p.name) }
     }))
@@ -30,7 +30,7 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params }) => {
 
-    const resp = await Stripe.products.list();
+    const resp = await Stripe.products.list({limit:100});
     const p = resp.data.filter(p => p.name == slugToName(params.slug))[0]
     const priceResp = await Stripe.prices.list({ product: p.id })
 

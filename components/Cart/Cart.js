@@ -25,9 +25,6 @@ const Cart = (props) => {
 
   return (
     <>
-      <div className="relative px-4 sm:px-6 pb-4">
-        <h4 className="text-xl">My Cart</h4>
-      </div>
       <div className="px-4 sm:px-6 flex-1">
         {lineItems.length > 0 ? (
           lineItems.map((item) => (

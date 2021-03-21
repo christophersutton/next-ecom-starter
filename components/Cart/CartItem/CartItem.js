@@ -1,7 +1,6 @@
 import { useCart } from "../useCart";
 import { useDisplayPrice } from "@utils";
 import { TrashCan } from "@components/UI/Icons";
-import { CircularButton } from "@components/UI/Button";
 import Image from "next/image";
 
 const CartItem = ({ item }) => {
@@ -26,11 +25,9 @@ const CartItem = ({ item }) => {
       <div className="flex-grow px-4">
         <p className="text-lg">{item.name}</p>
         <div className="mt-4">
-          {item.quantity > 1 ? (
-            <button onClick={() => handleDecrement()}>-</button>
-          ) : (
-            ""
-          )}
+          
+            <button disabled={item.quantity <= 0}onClick={() => handleDecrement()}>-</button>
+          
           <span className="px-3">{item.quantity}</span>
           <button onClick={() => handleIncrement()}>+</button>
         </div>

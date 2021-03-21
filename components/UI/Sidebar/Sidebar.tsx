@@ -4,10 +4,12 @@ import { Transition } from "@headlessui/react";
 interface Props {
   children: any
   isOpen: boolean
+  sidebarView: string
   closeSidebar: () => void
 }
 
-const Sidebar: FC<Props> = ({ children, isOpen, closeSidebar }) => {
+const Sidebar: FC<Props> = ({ children, isOpen, sidebarView, closeSidebar }) => {
+  console.log(sidebarView);
   return (
     <Transition
       show={isOpen}
@@ -28,6 +30,10 @@ const Sidebar: FC<Props> = ({ children, isOpen, closeSidebar }) => {
               <div className="h-full flex flex-col bg-white shadow-xl">
                 <div className="pt-8 sm:px-6">
                   <div className="flex items-start justify-between">
+                  <div className="relative">
+                    
+                    <h4 className="text-xl">{ sidebarView === "CART" ? 'My Cart' : ''}</h4>
+                  </div>
                     <div className="ml-3 h-7 flex items-center">
                       <button
                         onClick={() => closeSidebar()}
@@ -54,7 +60,7 @@ const Sidebar: FC<Props> = ({ children, isOpen, closeSidebar }) => {
                     </div>
                   </div>
                 </div>
-                <div className="min-h-0 flex-1 flex flex-col py-6 overflow-y-scroll">
+                <div className="min-h-0 flex-1 flex flex-col py-2 ">
                   {children}
                 </div>
               </div>
